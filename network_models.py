@@ -4,16 +4,18 @@ import os
 import keras.models as km
 import keras.layers as kl
 
+
 def recipe_lstm(num_lstms, sentence_length, num_words):
 
     print( 'Building network.' )
     model = km.Sequential()
     model.add(kl.LSTM(num_lstms, input_shape = (sentence_length, num_words)))
     model.add(kl.Dense(num_words, activation = 'softmax'))
-    model.compile(loss = 'categorical_crossentropy', optimizer = 'sgd',
+    model.compile(loss = 'categorical_crossentropy', optimizer = 'rms_prop',
                   metrics = ['accuracy'])
 
     return model
+
 
 def unet_lstm():
 
