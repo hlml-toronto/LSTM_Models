@@ -11,7 +11,7 @@ def recipe_lstm(num_lstms, sentence_length, num_words):
     model = km.Sequential()
     model.add(kl.LSTM(num_lstms, input_shape = (sentence_length, num_words)))
     model.add(kl.Dense(num_words, activation = 'softmax'))
-    model.compile(loss = 'categorical_crossentropy', optimizer = 'rms_prop',
+    model.compile(loss = 'categorical_crossentropy', optimizer = 'rmsprop',
                   metrics = ['accuracy'])
 
     return model

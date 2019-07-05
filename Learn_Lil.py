@@ -66,8 +66,11 @@ def process_data(name_model, datafile0, sentence_length = 50, word_limit = 50000
         corpus0 = corpus0.replace('?', ' ? ')
         corpus0 = corpus0.replace('\r\n', ' \r\n ')
         corpus0 = corpus0.replace('\n', ' \n ')
+        corpus0 = corpus0.replace('"', ' " ')
+        corpus0 = corpus0.replace('\"', ' \"  ')
+        corpus0 = corpus0.replace('\'', ' \' ')
 
-        # Convert the text to lower case.
+       # Convert the text to lower case.
         corpus0 = corpus0.lower()
 
         # Split the words by spaces; only take the first 500000 words. This number was chosen based on memory limits and training-time
@@ -147,11 +150,11 @@ def process_data(name_model, datafile0, sentence_length = 50, word_limit = 50000
         x = np.load('data/' + datafile + '.x.npy')
         y = np.load('data/' + datafile + '.y.npy')
 
-    return 0
+    return x, y, num_words
 
 model_name = 'poems'
 txt_file = 'poems.txt'
-sentence_length = 50
+sentence_length = 20
 
 # If datafile hasn't been made yet, make it
 if (not os.path.isfile('data/' + txt_file)):
@@ -159,7 +162,7 @@ if (not os.path.isfile('data/' + txt_file)):
         os.makedirs('data/')
     ddb.create_txtfile_dbpoetry( txt_file )
 
-process_data(model_name, txt_file, sentence_length, 50000)
+xdata, ydata, num_words = process_data(model_name, txt_file, sentence_length, 50000)
 
 # If this is our first rodeo, build the model.
 if (not os.path.isfile('data/' + model_name + '.model.h5')):
@@ -172,7 +175,7 @@ else:
 
 # Fit!  Begin elevator music...
 print( 'Beginning fit.' )
-fit = model.fit(x, y, epochs = 200, batch_size = 128, verbose = 2)
+fit = model.fit(xdata, ydata, epochs = 100, batch_size = 128, verbose = 2)
 
 # Save the model so that we can use it as a starting point.
 model.save('data/' + model_name + '.model.h5')
