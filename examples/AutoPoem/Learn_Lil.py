@@ -66,6 +66,9 @@ def process_data(name_model, datafile0, sentence_length = 50, word_limit = 50000
         corpus0 = corpus0.replace('?', ' ? ')
         corpus0 = corpus0.replace('\r\n', ' \r\n ')
         corpus0 = corpus0.replace('\n', ' \n ')
+        corpus0 = corpus0.replace('-', ' - ')
+        corpus0 = corpus0.replace('-', ' - ')
+
 
         # Convert the text to lower case.
         corpus0 = corpus0.lower()
@@ -147,11 +150,15 @@ def process_data(name_model, datafile0, sentence_length = 50, word_limit = 50000
         x = np.load('data/' + datafile + '.x.npy')
         y = np.load('data/' + datafile + '.y.npy')
 
-    return 0
+    return num_words, x, y
 
 model_name = 'poems'
 txt_file = 'poems.txt'
 sentence_length = 50
+
+# models folder creation
+if not os.path.exists('models/'):
+    os.makedirs('models/')
 
 # If datafile hasn't been made yet, make it
 if (not os.path.isfile('data/' + txt_file)):
@@ -159,20 +166,20 @@ if (not os.path.isfile('data/' + txt_file)):
         os.makedirs('data/')
     ddb.create_txtfile_dbpoetry( txt_file )
 
-process_data(model_name, txt_file, sentence_length, 50000)
+num_words, xdata, ydata = process_data(model_name, txt_file, sentence_length, 500)
 
 # If this is our first rodeo, build the model.
-if (not os.path.isfile('data/' + model_name + '.model.h5')):
+if (not os.path.isfile('models/' + model_name + '.model.h5')):
     model = nm.recipe_lstm(256, sentence_length, num_words)
 
 # Otherwise, use the previously-saved model as our starting point so that we can continue to improve it.
 else:
     print( 'Reading model file.' )
-    model = km.load_model('data/' + model_name + '.model.h5')
+    model = km.load_model('models/' + model_name + '.model.h5')
 
 # Fit!  Begin elevator music...
 print( 'Beginning fit.' )
-fit = model.fit(x, y, epochs = 200, batch_size = 128, verbose = 2)
+fit = model.fit(xdata, ydata, epochs = 5, batch_size = 128, verbose = 2)
 
 # Save the model so that we can use it as a starting point.
-model.save('data/' + model_name + '.model.h5')
+model.save('models/' + model_name + '.model.h5')
