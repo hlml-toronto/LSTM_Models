@@ -1,4 +1,4 @@
-# AutoPump (to rename)
+# ShortTermMemory (to rename?)
 
 Text prediction modeling.
 
