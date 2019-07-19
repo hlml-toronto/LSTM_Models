@@ -1,4 +1,4 @@
-# ShortTermMemory (to rename?)
+# LSTM_Models (to rename?)
 
 Text prediction modeling.
 
