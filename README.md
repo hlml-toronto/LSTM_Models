@@ -1,4 +1,4 @@
-# LSTM_Models (to rename?)
+# LSTM Models
 
 Text prediction modeling.
 
